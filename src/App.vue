@@ -2,101 +2,26 @@
   <div id="app">
     <h1>Cadastro de Clientes</h1>
 
-    <ClienteForm
-      ref="form"
-      :editando="clienteEditando"
-      @salvar="salvar"
-      @cancelar="cancelar"
-    />
+    <nav>
+      <router-link to="/" exact>Lista</router-link>
+      <router-link to="/clientes/novo">Novo cliente</router-link>
+    </nav>
 
-    <input
-      v-model="busca"
-      class="busca"
-      placeholder="Buscar por nome, e-mail ou telefone..."
-    />
+    <router-view :key="$route.fullPath" />
 
-    <ClienteLista
-      :clientes="clientesFiltrados"
-      @editar="editar"
-      @remover="remover"
-    />
+    <div v-if="toast.texto" :class="['toast', toast.tipo]">
+      {{ toast.texto }}
+    </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import ClienteForm from "./components/ClienteForm.vue";
-import ClienteLista from "./components/ClienteLista.vue";
-
-const api = axios.create({ baseURL: "http://localhost:3000" });
+import { toast } from "./notificar";
 
 export default {
   name: "App",
-  components: { ClienteForm, ClienteLista },
   data() {
-    return {
-      clientes: [],
-      clienteEditando: null,
-      busca: "",
-    };
-  },
-  computed: {
-    clientesFiltrados() {
-      const termo = this.busca.trim().toLowerCase();
-      if (!termo) return this.clientes;
-      return this.clientes.filter((c) =>
-        [c.nome, c.email, c.telefone].some((campo) =>
-          String(campo || "").toLowerCase().includes(termo)
-        )
-      );
-    },
-  },
-  created() {
-    this.carregar();
-  },
-  methods: {
-    async carregar() {
-      try {
-        const resposta = await api.get("/clientes");
-        this.clientes = resposta.data;
-      } catch (erro) {
-        alert("Erro ao carregar clientes. A API está rodando?");
-      }
-    },
-    async salvar(dados) {
-      try {
-        if (this.clienteEditando) {
-          const id = this.clienteEditando.id;
-          const resposta = await api.put(`/clientes/${id}`, dados);
-          const indice = this.clientes.findIndex((c) => c.id === id);
-          this.$set(this.clientes, indice, resposta.data);
-        } else {
-          const resposta = await api.post("/clientes", dados);
-          this.clientes.push(resposta.data);
-        }
-        this.clienteEditando = null;
-        this.$refs.form.limpar();
-      } catch (erro) {
-        alert("Erro ao salvar cliente.");
-      }
-    },
-    editar(cliente) {
-      this.clienteEditando = { ...cliente };
-    },
-    cancelar() {
-      this.clienteEditando = null;
-    },
-    async remover(id) {
-      try {
-        await api.delete(`/clientes/${id}`);
-        this.clientes = this.clientes.filter((c) => c.id !== id);
-        if (this.clienteEditando && this.clienteEditando.id === id) {
-          this.clienteEditando = null;
-        }
-      } catch (erro) {
-        alert("Erro ao excluir cliente.");
-      }
-    },
+    return { toast };
   },
 };
 </script>
@@ -106,6 +31,20 @@ export default {
   max-width: 600px;
   margin: 30px auto;
   font-family: Arial, sans-serif;
+}
+nav {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+nav a {
+  color: #2c3e50;
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+nav a.router-link-active {
+  border-bottom: 2px solid #42b983;
+  font-weight: bold;
 }
 .form {
   display: flex;
@@ -130,5 +69,24 @@ td {
   border-bottom: 1px solid #ddd;
   padding: 8px;
   text-align: left;
+}
+.erro {
+  color: #c0392b;
+  margin: -10px 0 16px;
+}
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.toast.sucesso {
+  background: #27ae60;
+}
+.toast.erro {
+  background: #c0392b;
 }
 </style>
