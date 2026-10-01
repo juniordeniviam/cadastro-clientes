@@ -49,9 +49,17 @@ Projeto simples de cadastro de clientes feito com **Vue 2**, **axios** e **json-
 
 ```
 src/
-├── App.vue                     # estado, busca e chamadas à API
+├── main.js                     # ponto de entrada, registra o router
+├── App.vue                     # moldura: menu, router-view e toast
+├── api.js                      # instância do axios (baseURL da API)
+├── notificar.js                # estado e função das mensagens (toast)
+├── router/
+│   └── index.js                # definição das rotas
+├── views/
+│   ├── ListaView.vue           # página da lista: carrega, busca e exclui
+│   └── FormView.vue            # página de cadastro e edição
 └── components/
-    ├── ClienteForm.vue         # formulário e validação de e-mail
+    ├── ClienteForm.vue         # formulário, validação de e-mail e máscara de telefone
     └── ClienteLista.vue        # tabela de clientes
 db.json                         # "banco de dados" do json-server
 ```
