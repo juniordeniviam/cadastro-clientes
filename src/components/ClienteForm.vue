@@ -3,9 +3,15 @@
     <div class="form">
       <input v-model="form.nome" placeholder="Nome" />
       <input v-model="form.email" placeholder="E-mail" />
-      <input v-model="form.telefone" placeholder="Telefone" />
-      <button @click="enviar">{{ editando ? "Salvar" : "Cadastrar" }}</button>
-      <button v-if="editando" @click="$emit('cancelar')">Cancelar</button>
+      <input
+        :value="form.telefone"
+        @input="atualizarTelefone"
+        placeholder="(00) 00000-0000"
+        maxlength="15"
+        inputmode="tel"
+      />
+      <button @click="enviar">{{ cliente ? "Salvar" : "Cadastrar" }}</button>
+      <button @click="$emit('cancelar')">Cancelar</button>
     </div>
     <p v-if="erro" class="erro">{{ erro }}</p>
   </div>
@@ -15,7 +21,7 @@
 export default {
   name: "ClienteForm",
   props: {
-    editando: { type: Object, default: null },
+    cliente: { type: Object, default: null },
   },
   data() {
     return {
@@ -24,20 +30,33 @@ export default {
     };
   },
   watch: {
-    editando(cliente) {
-      this.erro = "";
-      if (cliente) {
-        this.form = {
-          nome: cliente.nome,
-          email: cliente.email,
-          telefone: cliente.telefone,
-        };
-      } else {
-        this.limpar();
-      }
+    cliente: {
+      immediate: true,
+      handler(c) {
+        if (c) {
+          this.form = {
+            nome: c.nome,
+            email: c.email,
+            telefone: c.telefone || "",
+          };
+        }
+      },
     },
   },
   methods: {
+    mascararTelefone(valor) {
+      const n = valor.replace(/\D/g, "").slice(0, 11);
+      if (n.length <= 2) return n;
+      if (n.length <= 6) return `(${n.slice(0, 2)}) ${n.slice(2)}`;
+      if (n.length <= 10)
+        return `(${n.slice(0, 2)}) ${n.slice(2, 6)}-${n.slice(6)}`;
+      return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`;
+    },
+    atualizarTelefone(evento) {
+      const mascarado = this.mascararTelefone(evento.target.value);
+      this.form.telefone = mascarado;
+      evento.target.value = mascarado; // força o campo a refletir o valor mascarado
+    },
     emailValido(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     },
@@ -53,17 +72,6 @@ export default {
       this.erro = "";
       this.$emit("salvar", { ...this.form });
     },
-    limpar() {
-      this.form = { nome: "", email: "", telefone: "" };
-      this.erro = "";
-    },
   },
 };
 </script>
-
-<style>
-.erro {
-  color: #c0392b;
-  margin: -10px 0 16px;
-}
-</style>

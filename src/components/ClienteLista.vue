@@ -17,7 +17,7 @@
           <td>{{ c.email }}</td>
           <td>{{ c.telefone }}</td>
           <td>
-            <button @click="$emit('editar', c)">Editar</button>
+            <router-link :to="`/clientes/${c.id}/editar`">Editar</router-link>
             <button @click="$emit('remover', c.id)">Excluir</button>
           </td>
         </tr>
