@@ -89,4 +89,18 @@ td {
 .toast.erro {
   background: #c0392b;
 }
+th.ordenavel {
+  cursor: pointer;
+  user-select: none;
+}
+th.ordenavel:hover {
+  background: #f4f4f4;
+}
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
 </style>
