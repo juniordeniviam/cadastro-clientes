@@ -7,6 +7,10 @@
       <router-link to="/clientes/novo">Novo cliente</router-link>
     </nav>
 
+    <div v-if="carregando" class="loading">
+      <span class="spinner"></span> Carregando...
+    </div>
+
     <router-view :key="$route.fullPath" />
 
     <div v-if="toast.texto" :class="['toast', toast.tipo]">
@@ -16,12 +20,16 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { toast } from "./notificar";
 
 export default {
   name: "App",
   data() {
     return { toast };
+  },
+  computed: {
+    ...mapState(["carregando"]),
   },
 };
 </script>
@@ -102,5 +110,25 @@ th.ordenavel:hover {
   align-items: center;
   gap: 12px;
   margin-top: 16px;
+}
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #666;
+}
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ddd;
+  border-top-color: #42b983;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
