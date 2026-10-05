@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import api from "../api";
+import { mapState, mapActions } from "vuex";
 import { notificar } from "../notificar";
 import ClienteLista from "../components/ClienteLista.vue";
 import ConfirmModal from "../components/ConfirmModal.vue";
@@ -43,7 +43,6 @@ export default {
   components: { ClienteLista, ConfirmModal },
   data() {
     return {
-      clientes: [],
       busca: "",
       ordenarPor: "nome",
       direcao: "asc",
@@ -53,6 +52,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["clientes"]),
     clientesFiltrados() {
       const termo = this.busca.trim().toLowerCase();
       if (!termo) return this.clientes;
@@ -100,10 +100,13 @@ export default {
     this.carregar();
   },
   methods: {
+    ...mapActions({
+      carregarClientes: "carregar",
+      removerCliente: "remover",
+    }),
     async carregar() {
       try {
-        const resposta = await api.get("/clientes");
-        this.clientes = resposta.data;
+        await this.carregarClientes();
       } catch (erro) {
         notificar("Erro ao carregar clientes. A API está rodando?", "erro");
       }
@@ -124,8 +127,7 @@ export default {
       const { id } = this.clienteParaExcluir;
       this.clienteParaExcluir = null;
       try {
-        await api.delete(`/clientes/${id}`);
-        this.clientes = this.clientes.filter((c) => c.id !== id);
+        await this.removerCliente(id);
         notificar("Cliente excluído.");
       } catch (erro) {
         notificar("Erro ao excluir cliente.", "erro");

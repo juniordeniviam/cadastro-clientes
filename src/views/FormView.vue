@@ -1,12 +1,17 @@
 <template>
   <div>
     <h2>{{ id ? "Editar cliente" : "Novo cliente" }}</h2>
-    <ClienteForm :cliente="cliente" @salvar="salvar" @cancelar="voltar" />
+    <ClienteForm
+      :cliente="cliente"
+      :desabilitado="carregando"
+      @salvar="salvar"
+      @cancelar="voltar"
+    />
   </div>
 </template>
 
 <script>
-import api from "../api";
+import { mapState, mapActions } from "vuex";
 import { notificar } from "../notificar";
 import ClienteForm from "../components/ClienteForm.vue";
 
@@ -17,6 +22,7 @@ export default {
     return { cliente: null };
   },
   computed: {
+    ...mapState(["carregando"]),
     id() {
       return this.$route.params.id;
     },
@@ -24,21 +30,21 @@ export default {
   async created() {
     if (!this.id) return;
     try {
-      const resposta = await api.get(`/clientes/${this.id}`);
-      this.cliente = resposta.data;
+      this.cliente = await this.buscar(this.id);
     } catch (erro) {
       notificar("Cliente não encontrado.", "erro");
       this.voltar();
     }
   },
   methods: {
+    ...mapActions(["buscar", "criar", "atualizar"]),
     async salvar(dados) {
       try {
         if (this.id) {
-          await api.put(`/clientes/${this.id}`, dados);
+          await this.atualizar({ id: this.id, dados });
           notificar("Cliente atualizado!");
         } else {
-          await api.post("/clientes", dados);
+          await this.criar(dados);
           notificar("Cliente cadastrado!");
         }
         this.voltar();

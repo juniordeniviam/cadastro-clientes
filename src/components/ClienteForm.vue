@@ -10,7 +10,9 @@
         maxlength="15"
         inputmode="tel"
       />
-      <button @click="enviar">{{ cliente ? "Salvar" : "Cadastrar" }}</button>
+      <button :disabled="desabilitado" @click="enviar">
+        {{ cliente ? "Salvar" : "Cadastrar" }}
+      </button>
       <button @click="$emit('cancelar')">Cancelar</button>
     </div>
     <p v-if="erro" class="erro">{{ erro }}</p>
@@ -22,6 +24,7 @@ export default {
   name: "ClienteForm",
   props: {
     cliente: { type: Object, default: null },
+    desabilitado: { type: Boolean, default: false },
   },
   data() {
     return {
