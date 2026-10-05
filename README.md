@@ -14,7 +14,7 @@ Projeto simples de cadastro de clientes feito com **Vue 2**, **Vue Router**, **V
 - Notificações na tela (toast) e indicador de carregamento
 - Navegação entre páginas (lista e formulário)
 - Dados persistidos em uma API REST local (json-server)
-- Testes unitários com Jest
+- Testes unitários (Jest) e testes ponta a ponta (Cypress)
 
 ## Tecnologias
 
@@ -24,10 +24,11 @@ Projeto simples de cadastro de clientes feito com **Vue 2**, **Vue Router**, **V
 - axios
 - json-server 0.17.4
 - Jest e @vue/test-utils 1.x
+- Cypress
 
 ## Pré-requisitos
 
-- Node.js (versão 14 a 16 recomendada para Vue 2)
+- Node.js 18 ou superior (exigência do Cypress)
 
 ## Como rodar
 
@@ -51,17 +52,36 @@ Projeto simples de cadastro de clientes feito com **Vue 2**, **Vue Router**, **V
 
 4. Acesse `http://localhost:8080`.
 
-> Em Node 17 ou superior, se aparecer o erro `ERR_OSSL_EVP_UNSUPPORTED`, rode antes:
+> Com Node 17 ou superior, se aparecer o erro `ERR_OSSL_EVP_UNSUPPORTED`, rode antes:
 > - Windows (cmd): `set NODE_OPTIONS=--openssl-legacy-provider`
 > - Linux/macOS: `export NODE_OPTIONS=--openssl-legacy-provider`
 
 ## Testes
+
+### Unitários (Jest)
+
+Cobrem componentes (`ClienteForm`, `ConfirmModal`) e o store do Vuex, com a API simulada por mock.
 
 ```bash
 npm run test:unit
 ```
 
 Para rodar em modo observação: `npm run test:unit -- --watch`.
+
+### Ponta a ponta (Cypress)
+
+Cobrem o fluxo completo no navegador: listar, buscar, ordenar, paginar, cadastrar, editar e excluir. As chamadas à API são interceptadas com `cy.intercept`, então **não é preciso rodar a API** e o `db.json` não é alterado. É necessário que o front-end esteja rodando (`npm run serve`).
+
+```bash
+# em um terminal
+npm run serve
+
+# em outro terminal: abre a interface do Cypress
+npm run e2e
+
+# ou executa tudo no terminal, sem interface
+npm run e2e:run
+```
 
 ## Estrutura
 
@@ -85,9 +105,18 @@ src/
 tests/
 └── unit/
     ├── ClienteForm.spec.js     # testes da máscara, validação e evento "salvar"
-    └── ConfirmModal.spec.js    # testes de exibição e eventos do modal
+    ├── ConfirmModal.spec.js    # testes de exibição e eventos do modal
+    └── store.spec.js           # testes das actions e mutations do Vuex
+cypress/
+├── .eslintrc.js                # globais do Cypress para o ESLint
+├── support/
+│   └── api.js                  # API falsa com estado em memória (cy.intercept)
+└── e2e/
+    └── clientes.cy.js          # testes do fluxo completo
 public/
 └── _redirects                  # fallback de rotas no Netlify (modo history)
+cypress.config.js               # configuração do Cypress
+vue.config.js                   # configuração do Vue CLI (sem source maps em produção)
 db.json                         # "banco de dados" do json-server
 .env.development                # URL da API em desenvolvimento
 .env.production                 # URL da API em produção
@@ -95,13 +124,15 @@ db.json                         # "banco de dados" do json-server
 
 ## Scripts
 
-| Comando             | Descrição                                 |
-| ------------------- | ----------------------------------------- |
-| `npm run serve`     | Inicia o front-end em desenvolvimento     |
-| `npm run api`       | Inicia a API json-server na porta 3000    |
-| `npm run build`     | Gera a versão de produção na pasta `dist` |
-| `npm run lint`      | Verifica o código com ESLint              |
-| `npm run test:unit` | Executa os testes unitários               |
+| Comando             | Descrição                                      |
+| ------------------- | ---------------------------------------------- |
+| `npm run serve`     | Inicia o front-end em desenvolvimento          |
+| `npm run api`       | Inicia a API json-server na porta 3000         |
+| `npm run build`     | Gera a versão de produção na pasta `dist`      |
+| `npm run lint`      | Verifica o código com ESLint                   |
+| `npm run test:unit` | Executa os testes unitários                    |
+| `npm run e2e`       | Abre o Cypress (requer `npm run serve` ativo)  |
+| `npm run e2e:run`   | Executa os testes E2E no terminal              |
 
 ## Publicação
 
