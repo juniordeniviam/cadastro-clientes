@@ -10,9 +10,12 @@ Projeto simples de cadastro de clientes feito com **Vue 2**, **Vue Router**, **V
 - Validação de e-mail e máscara de telefone
 - Busca por nome, e-mail ou telefone
 - Ordenação por coluna e paginação
-- Modal de confirmação para exclusão
-- Notificações na tela (toast) e indicador de carregamento
-- Navegação entre páginas (lista e formulário)
+- Modal de confirmação para exclusão (fecha com Esc)
+- Notificações na tela (toast animado) e indicador de carregamento (barra no topo e skeleton)
+- Estado vazio com botão de ação
+- Navegação entre páginas (lista e formulário), com título da aba por página
+- Layout responsivo: no celular, cada linha da tabela vira um cartão
+- Acessibilidade: labels nos campos, foco visível, navegação por teclado e `aria-sort` nos cabeçalhos
 - Dados persistidos em uma API REST local (json-server)
 - Testes unitários (Jest) e testes ponta a ponta (Cypress)
 
@@ -23,6 +26,7 @@ Projeto simples de cadastro de clientes feito com **Vue 2**, **Vue Router**, **V
 - Vuex 3
 - axios
 - json-server 0.17.4
+- CSS próprio, com variáveis (design tokens), sem biblioteca de UI
 - Jest e @vue/test-utils 1.x
 - Cypress
 
@@ -87,21 +91,23 @@ npm run e2e:run
 
 ```
 src/
-├── main.js                     # ponto de entrada, registra router e store
-├── App.vue                     # moldura: menu, router-view, toast, loading e estilos globais
+├── main.js                     # ponto de entrada, registra router e store, importa o CSS
+├── App.vue                     # moldura: cabeçalho, menu, router-view, toast e barra de loading
 ├── api.js                      # instância do axios (baseURL da API)
 ├── notificar.js                # estado e função das mensagens (toast)
+├── assets/
+│   └── estilo.css              # estilos globais e design tokens (variáveis CSS)
 ├── router/
-│   └── index.js                # definição das rotas
+│   └── index.js                # rotas, título da aba, redirecionamento de URL inexistente
 ├── store/
 │   └── index.js                # Vuex: estado, mutations e actions de clientes
 ├── views/
 │   ├── ListaView.vue           # lista: busca, ordena, pagina e exclui (via store)
 │   └── FormView.vue            # cadastro e edição (via store)
 └── components/
-    ├── ClienteForm.vue         # formulário, validação de e-mail e máscara de telefone
-    ├── ClienteLista.vue        # tabela de clientes com cabeçalhos ordenáveis
-    └── ConfirmModal.vue        # modal de confirmação reutilizável
+    ├── ClienteForm.vue         # formulário com labels, validação de e-mail e máscara de telefone
+    ├── ClienteLista.vue        # tabela com avatar, cabeçalhos ordenáveis e estado vazio
+    └── ConfirmModal.vue        # modal de confirmação reutilizável (fecha com Esc)
 tests/
 └── unit/
     ├── ClienteForm.spec.js     # testes da máscara, validação e evento "salvar"
