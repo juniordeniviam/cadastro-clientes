@@ -1,0 +1,539 @@
+/* ===== Tokens ===== */
+:root {
+        --cor-primaria: #4f46e5;
+        --cor-primaria-escura: #4338ca;
+        --cor-perigo: #dc2626;
+        --cor-sucesso: #16a34a;
+        --cor-texto: #1f2937;
+        --cor-texto-suave: #6b7280;
+        --cor-borda: #e5e7eb;
+        --cor-fundo: #f3f4f6;
+        --cor-card: #ffffff;
+        --raio: 10px;
+        --sombra: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Base ===== */
+*,
+*::before,
+*::after {
+        box-sizing: border-box;
+}
+
+body {
+        margin: 0;
+        background: var(--cor-fundo);
+        color: var(--cor-texto);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+        line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+        margin: 0;
+}
+
+a {
+        color: var(--cor-primaria);
+}
+
+:focus-visible {
+        outline: 3px solid rgba(79, 70, 229, 0.4);
+        outline-offset: 2px;
+}
+
+.sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+}
+
+/* ===== Cabeçalho ===== */
+.topo {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--cor-card);
+        border-bottom: 1px solid var(--cor-borda);
+}
+
+.topo-interno {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+}
+
+.marca {
+        font-size: 1.15rem;
+        font-weight: 700;
+}
+
+nav {
+        display: flex;
+        gap: 4px;
+}
+
+nav a {
+        padding: 6px 14px;
+        border-radius: 999px;
+        color: var(--cor-texto-suave);
+        text-decoration: none;
+        font-weight: 500;
+}
+
+nav a:hover {
+        background: var(--cor-fundo);
+}
+
+nav a.router-link-active {
+        background: #e0e7ff;
+        color: var(--cor-primaria-escura);
+}
+
+.barra-loading {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--cor-primaria), transparent);
+        background-size: 50% 100%;
+        background-repeat: no-repeat;
+        animation: correr 1s linear infinite;
+}
+
+@keyframes correr {
+        from {
+                background-position: -50% 0;
+        }
+
+        to {
+                background-position: 150% 0;
+        }
+}
+
+/* ===== Layout ===== */
+.conteudo {
+        max-width: 900px;
+        margin: 24px auto;
+        padding: 0 16px;
+}
+
+.card {
+        background: var(--cor-card);
+        border: 1px solid var(--cor-borda);
+        border-radius: var(--raio);
+        box-shadow: var(--sombra);
+        padding: 20px;
+}
+
+.pagina-titulo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
+}
+
+.pagina-titulo h2 {
+        font-size: 1.4rem;
+}
+
+.voltar {
+        display: inline-block;
+        margin-bottom: 8px;
+        text-decoration: none;
+        color: var(--cor-texto-suave);
+}
+
+.voltar:hover {
+        color: var(--cor-primaria);
+}
+
+/* ===== Botões ===== */
+button,
+.btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border: 1px solid var(--cor-borda);
+        border-radius: 8px;
+        background: var(--cor-card);
+        color: var(--cor-texto);
+        font: inherit;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+}
+
+button:hover:not(:disabled),
+.btn:hover {
+        background: var(--cor-fundo);
+}
+
+button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+}
+
+button.primario,
+.btn.primario {
+        background: var(--cor-primaria);
+        border-color: var(--cor-primaria);
+        color: #fff;
+}
+
+button.primario:hover:not(:disabled),
+.btn.primario:hover {
+        background: var(--cor-primaria-escura);
+}
+
+button.perigo {
+        background: var(--cor-perigo);
+        border-color: var(--cor-perigo);
+        color: #fff;
+}
+
+button.perigo:hover:not(:disabled) {
+        background: #b91c1c;
+}
+
+button.excluir {
+        color: var(--cor-perigo);
+}
+
+button.excluir:hover:not(:disabled) {
+        background: #fef2f2;
+        border-color: #fecaca;
+}
+
+/* ===== Formulário ===== */
+.campos {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.campo label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.875rem;
+        font-weight: 600;
+}
+
+input {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background: #fff;
+        font: inherit;
+}
+
+input:focus {
+        outline: none;
+        border-color: var(--cor-primaria);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+input.invalido {
+        border-color: var(--cor-perigo);
+}
+
+p.erro {
+        margin: 16px 0 0;
+        padding: 10px 12px;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        background: #fef2f2;
+        color: #991b1b;
+}
+
+.acoes {
+        display: flex;
+        gap: 8px;
+        margin-top: 20px;
+}
+
+/* ===== Lista ===== */
+.barra-ferramentas {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
+}
+
+.busca {
+        flex: 1;
+        min-width: 200px;
+}
+
+.contador {
+        color: var(--cor-texto-suave);
+        font-size: 0.875rem;
+}
+
+.tabela-wrap {
+        padding: 0;
+        overflow-x: auto;
+}
+
+table {
+        width: 100%;
+        border-collapse: collapse;
+}
+
+th,
+td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--cor-borda);
+}
+
+th {
+        background: #f9fafb;
+        color: var(--cor-texto-suave);
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+}
+
+th.ordenavel {
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+}
+
+th.ordenavel:hover {
+        color: var(--cor-texto);
+}
+
+tbody tr:hover {
+        background: #f9fafb;
+}
+
+tbody tr:last-child td {
+        border-bottom: 0;
+}
+
+.celula-nome {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+}
+
+.avatar {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #e0e7ff;
+        color: var(--cor-primaria-escura);
+        font-size: 0.8rem;
+        font-weight: 700;
+}
+
+.acoes-linha {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+}
+
+.vazio {
+        text-align: center;
+        padding: 40px 16px;
+        color: var(--cor-texto-suave);
+}
+
+.vazio p {
+        margin: 0 0 14px;
+}
+
+.skeleton {
+        height: 44px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #eee 25%, #f7f7f7 37%, #eee 63%);
+        background-size: 400% 100%;
+        animation: brilho 1.2s ease infinite;
+}
+
+@keyframes brilho {
+        0% {
+                background-position: 100% 50%;
+        }
+
+        100% {
+                background-position: 0 50%;
+        }
+}
+
+.paginacao {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 16px;
+        color: var(--cor-texto-suave);
+}
+
+/* ===== Toast ===== */
+.toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 50;
+        max-width: 90vw;
+        padding: 12px 18px;
+        border-radius: 8px;
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.toast.sucesso {
+        background: var(--cor-sucesso);
+}
+
+.toast.erro {
+        background: var(--cor-perigo);
+}
+
+.toast-enter-active,
+.toast-leave-active {
+        transition: opacity 0.25s, transform 0.25s;
+}
+
+.toast-enter,
+.toast-leave-to {
+        opacity: 0;
+        transform: translateY(12px);
+}
+
+/* ===== Modal ===== */
+.modal-fundo {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(17, 24, 39, 0.5);
+        animation: aparecer 0.15s;
+}
+
+.modal {
+        width: 100%;
+        max-width: 400px;
+        padding: 24px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        animation: subir 0.2s;
+}
+
+.modal h3 {
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+}
+
+.modal p {
+        margin: 0;
+        color: var(--cor-texto-suave);
+}
+
+.modal-botoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 20px;
+}
+
+@keyframes aparecer {
+        from {
+                opacity: 0;
+        }
+
+        to {
+                opacity: 1;
+        }
+}
+
+@keyframes subir {
+        from {
+                opacity: 0;
+                transform: translateY(12px);
+        }
+
+        to {
+                opacity: 1;
+                transform: translateY(0);
+        }
+}
+
+/* ===== Celular: cada linha vira um cartão ===== */
+@media (max-width: 640px) {
+        .tabela-wrap {
+                overflow: visible;
+                background: transparent;
+                border: 0;
+                box-shadow: none;
+        }
+
+        thead {
+                display: none;
+        }
+
+        table,
+        tbody,
+        tr,
+        td {
+                display: block;
+                width: 100%;
+        }
+
+        tbody tr {
+                margin-bottom: 12px;
+                padding: 4px 0;
+                border: 1px solid var(--cor-borda);
+                border-radius: var(--raio);
+                background: var(--cor-card);
+        }
+
+        td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                padding: 8px 16px;
+                border-bottom: 0;
+                text-align: right;
+        }
+
+        td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--cor-texto-suave);
+                text-align: left;
+        }
+}
