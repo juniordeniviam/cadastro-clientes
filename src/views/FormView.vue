@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h2>{{ id ? "Editar cliente" : "Novo cliente" }}</h2>
+    <router-link to="/" class="voltar">← Voltar para a lista</router-link>
+    <div class="pagina-titulo">
+      <h2>{{ id ? "Editar cliente" : "Novo cliente" }}</h2>
+    </div>
     <ClienteForm
       :cliente="cliente"
       :desabilitado="carregando"

@@ -1,12 +1,28 @@
 <template>
   <div>
-    <input
-      v-model="busca"
-      class="busca"
-      placeholder="Buscar por nome, e-mail ou telefone..."
-    />
+    <div class="pagina-titulo">
+      <h2>Clientes</h2>
+      <router-link to="/clientes/novo" class="btn primario">
+        + Novo cliente
+      </router-link>
+    </div>
 
+    <div class="barra-ferramentas">
+      <input
+        v-model="busca"
+        class="busca"
+        type="search"
+        placeholder="Buscar por nome, e-mail ou telefone..."
+        aria-label="Buscar clientes"
+      />
+      <span class="contador">{{ textoContador }}</span>
+    </div>
+
+    <div v-if="carregando && clientes.length === 0" class="card">
+      <div v-for="n in 4" :key="n" class="skeleton"></div>
+    </div>
     <ClienteLista
+      v-else
       :clientes="clientesPagina"
       :ordenar-por="ordenarPor"
       :direcao="direcao"
@@ -25,6 +41,7 @@
     <ConfirmModal
       :visivel="!!clienteParaExcluir"
       :mensagem="mensagemExclusao"
+      titulo="Excluir cliente"
       texto-confirmar="Excluir"
       @confirmar="confirmarExclusao"
       @cancelar="clienteParaExcluir = null"
@@ -52,7 +69,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(["clientes"]),
+    ...mapState(["clientes", "carregando"]),
+    textoContador() {
+      const n = this.clientesFiltrados.length;
+      return n === 1 ? "1 cliente" : `${n} clientes`;
+    },
     clientesFiltrados() {
       const termo = this.busca.trim().toLowerCase();
       if (!termo) return this.clientes;
